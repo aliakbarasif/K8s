@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - args:
+        - sh
+        - ./docker-entrypoint.sh
+        env:
+        - name: POSTGRES_DATABASE
+          value: signupdb
+        - name: POSTGRES_HOST
+          value: db
+        - name: POSTGRES_PASSWORD
+          value: ali12345
+        - name: POSTGRES_USERNAME
+          value: ali
+        # - name: DATABASE_URL
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: backend-config
+        #       key: database_url
+        image: aliakbarasiff/signup-app:backend
+        name: backend
+        ports:
+        - containerPort: 4000
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: backend-config
+#   labels:
+#     app: backend
+# data:
+#   database_url: postgres-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: backend
+spec:
+  ports:
+  - protocol: TCP
+    port: 4000
+    targetPort: 4000
+    nodePort: 30001
+  selector:
+    app: backend
+  type: NodePort
