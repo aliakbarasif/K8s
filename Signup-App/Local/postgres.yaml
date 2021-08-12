@@ -88,9 +88,3 @@ spec:
    type: NodePort
    selector:
     app: postgres
-
-
-
-
-
-    ashkjhdsakjhdskjahjkhadskjhkjdsahkj
